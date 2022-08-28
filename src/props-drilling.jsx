@@ -2,8 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import React, {useState} from "react"
 
-const AppContext = React.createContext()
-
 function App() {
   let [currentUser, setCurrentUser] = React.useState()
   return (
@@ -12,14 +10,7 @@ function App() {
         <Header/>
       </div>
       <div style={{flex:1}}>
-        {currentUser?(
-          // composition syle of ignoring the prop drilling and manipulating the componenet children
-        <Dashboard>
-          <DashboardNav/>
-          <DashboardContent>
-            <WelcomeMessage user={currentUser}/>
-          </DashboardContent>
-        </Dashboard>
+        {currentUser?(<Dashboard user={currentUser}/>
         ):
         (<LoginScreen onLogin ={()=> setCurrentUser({name:"micheal"})}/> //passing function as a props
         )}
@@ -49,18 +40,17 @@ function LoginScreen({onLogin}){ // accepting function as a props
   )
 }
 
-function Dashboard({children}){
+function Dashboard({user}){
   return(
     <div>
       <h2>The Dashboard</h2>
-      {/* Passing children to the parent component, making parent element aware of having t he children */}
-      {children} 
-
+      <DashboardNav/>
+      <DashboardContent user={user}/>
     </div>
   )
 }
 
-function DashboardNav(){
+function DashboardNav({user}){
   return(
     <div>
       <h2>DashboardNav</h2>
@@ -68,11 +58,11 @@ function DashboardNav(){
   )
 }
 
-function DashboardContent({children}){
+function DashboardContent({user}){
   return(
     <div>
       <h3>DashboardContent</h3>
-      {children}
+      <WelcomeMessage user={user.name}></WelcomeMessage>
     </div>
   )
 }
@@ -80,7 +70,7 @@ function DashboardContent({children}){
 function WelcomeMessage({user}){
   return(
     <div>
-      <p>{user.name}</p>
+      <p>{user}</p>
     </div>
   )
 }
